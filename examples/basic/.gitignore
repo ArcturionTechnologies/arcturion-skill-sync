@@ -1,0 +1,2 @@
+# --apply creates these symlink trees; they hold absolute paths, so never commit them
+agents/

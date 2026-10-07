@@ -1,0 +1,18 @@
+name: ci
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install PyYAML
+        run: python3 -m pip install pyyaml
+      - name: Unit tests
+        run: python3 -m unittest discover -s tests -v
+      - name: Project the bundled example, then prove it is clean
+        run: |
+          python3 arcturion_skill_sync.py --manifest examples/basic/manifest.json --apply
+          python3 arcturion_skill_sync.py --manifest examples/basic/manifest.json --check

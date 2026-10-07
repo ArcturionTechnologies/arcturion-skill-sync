@@ -1,0 +1,18 @@
+{
+  "schema": "arcturion.skill-sync-assignments",
+  "schema_version": 2,
+  "universe_baseline": [
+    {"name": "hello-world", "source": "skills/hello-world"},
+    {"name": "release-notes", "source": "skills/release-notes"}
+  ],
+  "agents": {
+    "builder": {
+      "root": "agents/builder/.claude/skills",
+      "inherits_universe_baseline": true
+    },
+    "researcher": {
+      "root": "agents/researcher/.claude/skills",
+      "inherits_universe_baseline": true
+    }
+  }
+}
