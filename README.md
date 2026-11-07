@@ -5,7 +5,7 @@ Cross-harness skill installer for Claude Code, Codex and Hermes.
 You write a skill once, as a folder with a `SKILL.md`. One JSON manifest says
 which agents get which skills. ArcturionSkillSync links those folders into every
 harness the agent runs in, checks every `SKILL.md` before it touches anything,
-and keeps a small state file so it only ever removes links it created itself.
+and keeps a small state file to track the links it manages.
 
 Python 3.10+, one file, one dependency (PyYAML, for strict frontmatter checks).
 
@@ -29,15 +29,16 @@ ArcturionSkillSync makes the manifest the only source of truth:
   unknown frontmatter keys, names that aren't lowercase-hyphenated, or angle
   brackets in a description: any of these stops the run before a single link is
   written.
-- **Owns only what it made.** A `.arcturion-skill-sync.json` file in each skills
-  folder records the links this tool created. It never deletes or overwrites a
-  real file, a hand-made symlink, or a skill it doesn't own. Those show up as
-  findings instead.
+- **Managed links.** A `.arcturion-skill-sync.json` file in each skills folder
+  records links this tool created. Unowned conflicts are reported instead of
+  replaced during normal projection. An explicitly configured Hermes override
+  can move a bundled skill to a shadow folder and replace it with a link.
 - **Hash-tracked baseline.** With schema version 2, every agent inherits one
   shared `universe_baseline`. The tool hashes each agent's resolved skill list
   and reports `baseline_resolution_drift` if any agent differs.
-- **Check mode is the default.** `--check` changes nothing and exits `1` when
-  anything is missing, stale or in conflict. `--apply` repairs what it safely can.
+- **Check mode is the default.** The projection check does not apply changes and
+  exits `1` when anything is missing, stale or in conflict. `--apply` repairs
+  managed projections. Optional smoke checks invoke harness tooling.
 
 ## Quickstart
 
